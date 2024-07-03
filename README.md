@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # fitness_coach_app
 
 Fitness Coach AI App
@@ -14,3 +15,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# gemini_ai_api_compitation_app
+This is repo is for the gemini ai competation app 
+>>>>>>> 4b5848a (Initial commit)
