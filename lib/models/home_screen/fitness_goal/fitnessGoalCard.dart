@@ -1,19 +1,24 @@
+import 'package:fitness_coach_app/models/home_screen/home_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/text_style.dart';
 import '../../app_landing/dependecy_inject.dart';
 import 'fitness_goal_dm.dart';
 
+// ignore: must_be_immutable
 class Fitnessgoalcard extends StatefulWidget {
   FitnessGoalDm? fitnessGoalDm;
   VoidCallback onTap;
+  int? index;
 
   bool? isSelected;
   Fitnessgoalcard(
       {super.key,
       required this.fitnessGoalDm,
       required this.onTap,
-      this.isSelected});
+      this.isSelected,
+      this.index});
 
   @override
   State<Fitnessgoalcard> createState() => _FitnessgoalcardState();
@@ -24,7 +29,7 @@ class _FitnessgoalcardState extends State<Fitnessgoalcard> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: widget.onTap,
       child: Card(
         shape: RoundedRectangleBorder(
@@ -86,6 +91,10 @@ class _FitnessgoalcardState extends State<Fitnessgoalcard> {
                 ),
               ],
             ),
+            if ((widget.isSelected ?? false) && widget.index != 0)
+              const SizedBox(
+                height: 10,
+              ),
             if (widget.isSelected ?? false)
               Wrap(
                 alignment: WrapAlignment.center,
@@ -99,6 +108,10 @@ class _FitnessgoalcardState extends State<Fitnessgoalcard> {
                     keyProp(widget.fitnessGoalDm?.keyPoints?[index])
                 ],
               ),
+            if ((widget.isSelected ?? false) && widget.index != 0)
+              const SizedBox(
+                height: 10,
+              ),
           ],
         ),
       ),
@@ -107,19 +120,57 @@ class _FitnessgoalcardState extends State<Fitnessgoalcard> {
 
   Widget keyProp(KeyPoint? keyPoint) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        side: const BorderSide(
-          color: Colors.black38,
-          width: 0,
+      style: ButtonStyle(
+        padding: const WidgetStatePropertyAll(
+          EdgeInsets.symmetric(horizontal: 10),
+        ),
+        elevation: WidgetStateProperty.resolveWith<double>((state) => 0),
+        side: WidgetStateProperty.resolveWith<BorderSide>(
+          (state) => const BorderSide(
+            color: Colors.black38,
+            width: 0,
+          ),
+        ),
+        backgroundColor: WidgetStateProperty.resolveWith<Color>(
+          (state) {
+            if (state.contains(WidgetState.pressed) ||
+                (keyPoint?.isSelected ?? false)) {
+              return Colors.purpleAccent;
+            }
+            return Colors.white;
+          },
+        ),
+        foregroundColor: WidgetStateProperty.resolveWith<Color>(
+          (state) {
+            if (state.contains(WidgetState.pressed) ||
+                (keyPoint?.isSelected ?? false)) {
+              return Colors.white;
+            }
+            return Colors.black;
+          },
+        ),
+        textStyle: WidgetStateProperty.resolveWith<TextStyle>(
+          (state) {
+            if (state.contains(WidgetState.pressed) ||
+                (keyPoint?.isSelected ?? false)) {
+              return getIt<AppTextStyle>().mukta10pxnormalWhite;
+            }
+            return getIt<AppTextStyle>().mukta10pxnormalBlack;
+          },
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        int? itemIndex = widget.fitnessGoalDm?.keyPoints?.indexOf(keyPoint!);
+        if (itemIndex != null) {
+          KeyPoint tempItem = widget.fitnessGoalDm!.keyPoints![itemIndex];
+          tempItem.isSelected = !(tempItem.isSelected ?? false);
+          widget.fitnessGoalDm?.keyPoints?[itemIndex] = tempItem;
+        }
+        BlocProvider.of<HomeBloc>(context)
+            .add(SelectFitnessGoalEvent(widget.fitnessGoalDm!));
+      },
       child: Text(
         keyPoint?.title ?? '',
-        style: getIt<AppTextStyle>().mukta10pxnormal,
       ),
     );
   }

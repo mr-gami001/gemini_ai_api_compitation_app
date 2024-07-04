@@ -2,6 +2,8 @@ import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
 import 'package:fitness_coach_app/models/home_screen/fitness_goal/fitness_goals.dart';
 import 'package:fitness_coach_app/models/home_screen/home_bloc.dart';
 import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation.dart';
+import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation_dm.dart';
+import 'package:fitness_coach_app/models/result_screen/result_screen.dart';
 import 'package:fitness_coach_app/utils/constants.dart';
 import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
@@ -34,45 +36,67 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
-            child: BlocBuilder(
-                bloc: homeBloc,
-                builder: (context, state) {
-                  if (state is SucessState) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        fitnessLevel(state.selectedLevel),
+            child: BlocConsumer(
+              bloc: homeBloc,
+              builder: (context, state) {
+                if (state is SucessState) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      fitnessLevel(state.selectedLevel),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      fitnessGoals(state.selectedLevel, state.fitnessGoalsList),
+                      if (Constants.currentLevel.value.isNotEmpty)
                         const SizedBox(
                           height: 20,
                         ),
-                        fitnessGoals(
-                            state.selectedLevel, state.fitnessGoalsList),
-                        if (Constants.currentLevel.value.isNotEmpty)
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        if (state.fitnessGoalsList.isNotEmpty) limitation(),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        if (state.selectedLevel.isNotEmpty &&
-                            state.fitnessGoalsList.isNotEmpty)
-                          submitBtn(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (state.fitnessGoalsList.isNotEmpty)
+                        limitation(state.selectedLimitationList),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (state.selectedLevel.isNotEmpty &&
+                          state.fitnessGoalsList.isNotEmpty)
+                        submitBtn(state),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   );
-                }),
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              listener: (context, state) async {
+                if (state is SucessState) {
+                  String selectedLimitationString = '';
+                  state.selectedLimitationList.forEach((element) {
+                    if (element.isSelected == true) {
+                      selectedLimitationString =
+                          selectedLimitationString + "\t${element.title}";
+                    }
+                  });
+                  print(selectedLimitationString);
+                }
+                if (state is TransmitState) {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ResultScreen(reslutText: state.reslutText),
+                    ),
+                  );
+                  homeBloc.add(InitEvent());
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -87,17 +111,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget submitBtn() {
+  Widget submitBtn(HomeBlocState state) {
+    if (state is SucessState && state.isSubmitLoading == true) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Align(
       alignment: Alignment.center,
       child: ElevatedButton(
-        onPressed: () {},
-        child: Text("Submit"),
+        style: ButtonStyle(
+          shape: WidgetStateProperty.resolveWith<OutlinedBorder>((shape) =>
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+        ),
+        onPressed: () {
+          homeBloc.add(SubmitEvent());
+        },
+        child: Text(
+          "Submit",
+          style: getIt<AppTextStyle>().mukta15pxboldBlack,
+        ),
       ),
     );
   }
 
-  Widget limitation() {
+  Widget limitation(List<LimitationListDm> selectedLimitationList) {
+    if (selectedLimitationList.isNotEmpty) {
+      return Limitation(
+        selectedLimitation: selectedLimitationList.first,
+      );
+    }
     return Limitation();
   }
 
@@ -107,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedGoalList: goalCheckList,
       );
     } else {
-      return SizedBox();
+      return const SizedBox();
     }
   }
 

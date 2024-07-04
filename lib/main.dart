@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [BlocProvider(create: (context) => AppBloc())],
       child: MaterialApp(
+        navigatorKey: Constants.navKey,
         debugShowCheckedModeBanner: false,
         home: AppLandingScreen(),
       ),

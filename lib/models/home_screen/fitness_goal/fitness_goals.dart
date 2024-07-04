@@ -8,6 +8,7 @@ import '../../app_landing/dependecy_inject.dart';
 import 'fitnessGoalCard.dart';
 import 'fitness_goal_dm.dart';
 
+// ignore: must_be_immutable
 class FitnessGoals extends StatelessWidget {
   List<FitnessGoalDm> selectedGoalList;
 
@@ -19,7 +20,7 @@ class FitnessGoals extends StatelessWidget {
       iconText: Constants.improveOverallHealth,
       desc:
           "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
-      index: 1,
+      index: 0,
     ),
     FitnessGoalDm(
       iconText: Constants.specificEvent,
@@ -38,7 +39,7 @@ class FitnessGoals extends StatelessWidget {
           title: "Mindfulness Challenges",
         ),
       ],
-      index: 2,
+      index: 1,
     ),
     FitnessGoalDm(
       iconText: Constants.improveForParticularSport,
@@ -70,7 +71,7 @@ class FitnessGoals extends StatelessWidget {
         ),
         KeyPoint(title: "Rugby")
       ],
-      index: 3,
+      index: 2,
     ),
     FitnessGoalDm(
       iconText: Constants.moreTonedPhysique,
@@ -95,12 +96,16 @@ class FitnessGoals extends StatelessWidget {
           title: "Consistency",
         )
       ],
-      index: 4,
+      index: 3,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    if (selectedGoalList.isNotEmpty) {
+      int index = (selectedGoalList.first.index!);
+      fitnessGoalList[index] = selectedGoalList.first;
+    }
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,6 +118,7 @@ class FitnessGoals extends StatelessWidget {
         for (int index = 0; index < fitnessGoalList.length; index++)
           Fitnessgoalcard(
             fitnessGoalDm: fitnessGoalList[index],
+            index: index,
             isSelected: selectedGoalList.isNotEmpty
                 ? selectedGoalList.first.title == fitnessGoalList[index].title
                 : false,
