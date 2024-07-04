@@ -5,11 +5,11 @@ import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitatio
 import 'package:fitness_coach_app/utils/constants.dart';
 import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:health/health.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../chat_screen/chat_screen.dart';
 import 'fitess_level_button.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'fitness_goal/fitness_goal_dm.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -19,9 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   HomeBloc homeBloc = HomeBloc();
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: BlocBuilder(
-              bloc: homeBloc,
-              builder: (context,state) {
-               if(state is SucessState) {
+                bloc: homeBloc,
+                builder: (context, state) {
+                  if (state is SucessState) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        fitnessGoals(state.selectedLevel,state.fitnessGoalsList),
+                        fitnessGoals(
+                            state.selectedLevel, state.fitnessGoalsList),
                         if (Constants.currentLevel.value.isNotEmpty)
                           const SizedBox(
                             height: 20,
@@ -57,12 +56,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        if(state.fitnessGoalsList.isNotEmpty)limitation()
+                        if (state.fitnessGoalsList.isNotEmpty) limitation(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        if (state.selectedLevel.isNotEmpty &&
+                            state.fitnessGoalsList.isNotEmpty)
+                          submitBtn(),
+                        const SizedBox(
+                          height: 20,
+                        ),
                       ],
                     );
-                  }return const  Center(child: CircularProgressIndicator(),);
-                }
-            ),
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
           ),
         ),
       ),
@@ -77,22 +87,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget submitBtn() {
+    return Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text("Submit"),
+      ),
+    );
+  }
+
   Widget limitation() {
     return Limitation();
   }
 
-  Widget fitnessGoals(String selectedText,List<String> goalCheckList) {
-
-        if (selectedText.isNotEmpty) {
-          return FitnessGoals(selectedGoalList: goalCheckList,);
-        } else {
-          return SizedBox();
-        }
-
+  Widget fitnessGoals(String selectedText, List<FitnessGoalDm> goalCheckList) {
+    if (selectedText.isNotEmpty) {
+      return FitnessGoals(
+        selectedGoalList: goalCheckList,
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Widget fitnessLevel(String selectedText) {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

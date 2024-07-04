@@ -1,21 +1,18 @@
-import 'package:fitness_coach_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/text_style.dart';
 import '../../app_landing/dependecy_inject.dart';
+import 'fitness_goal_dm.dart';
 
 class Fitnessgoalcard extends StatefulWidget {
-  String title;
-  String desc;
+  FitnessGoalDm? fitnessGoalDm;
   VoidCallback onTap;
-  String? iconText;
+
   bool? isSelected;
   Fitnessgoalcard(
       {super.key,
-      required this.title,
-      required this.desc,
+      required this.fitnessGoalDm,
       required this.onTap,
-      this.iconText,
       this.isSelected});
 
   @override
@@ -28,77 +25,101 @@ class _FitnessgoalcardState extends State<Fitnessgoalcard> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: widget.onTap??(){
-        if(!checkList.contains(widget.title)){
-          checkList.add(widget.title);
-        }else{
-          checkList.remove(widget.title);
-        }
-        setState(() {
-
-        });
-      },
+      onTap: widget.onTap,
       child: Card(
-        
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
+        child: Column(
           children: [
-            if (widget.iconText != null)
-              Container(
-                width: (MediaQuery.of(context).size.width - 40) * 0.4,
-                height: 100,
-                decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                        image: AssetImage(widget.iconText!),
-                        fit: BoxFit.fill,
-                        filterQuality: FilterQuality.high)),
-              ),
-            const SizedBox(
-              width: 20,
+            Row(
+              children: [
+                if (widget.fitnessGoalDm?.iconText != null)
+                  Flexible(
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          widget.fitnessGoalDm?.iconText ?? '',
+                          fit: BoxFit.fitHeight,
+                        )),
+                  ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        widget.fitnessGoalDm?.title ?? '',
+                        textAlign: TextAlign.start,
+                        style: getIt<AppTextStyle>().mukta15pxbold,
+                      ),
+                      Text(
+                        widget.fitnessGoalDm?.desc ?? '',
+                        textAlign: TextAlign.start,
+                        style: getIt<AppTextStyle>().mukta13pxnormal,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  width: 20,
+                  child: Radio(
+                    value: widget.isSelected,
+                    onChanged: (value) {
+                      widget.onTap.call();
+                    },
+                    groupValue: true,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (widget.isSelected ?? false)
+              Wrap(
+                alignment: WrapAlignment.center,
+                runAlignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    widget.title,
-                    textAlign: TextAlign.start,
-                    style: getIt<AppTextStyle>().mukta15pxbold,
-                  ),
-                  Text(
-                    widget.desc,
-                    textAlign: TextAlign.start,
-                    style: getIt<AppTextStyle>().mukta13pxnormal,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  )
+                  for (int index = 0;
+                      index < (widget.fitnessGoalDm?.keyPoints?.length ?? 0);
+                      index++)
+                    keyProp(widget.fitnessGoalDm?.keyPoints?[index])
                 ],
               ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            SizedBox(
-              width: 20,
-              child: Checkbox(
-                value: widget.isSelected,
-                onChanged: (bool? value) {
-                  widget.onTap.call();
-                },
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget keyProp(KeyPoint? keyPoint) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        side: const BorderSide(
+          color: Colors.black38,
+          width: 0,
+        ),
+      ),
+      onPressed: () {},
+      child: Text(
+        keyPoint?.title ?? '',
+        style: getIt<AppTextStyle>().mukta10pxnormal,
       ),
     );
   }

@@ -1,44 +1,100 @@
 import 'package:fitness_coach_app/models/home_screen/home_bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/constants.dart';
 import '../../../utils/text_style.dart';
 import '../../app_landing/dependecy_inject.dart';
 import 'fitnessGoalCard.dart';
-import '../limitation_screen/limitation_dm.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'fitness_goal_dm.dart';
 
 class FitnessGoals extends StatelessWidget {
-  List<String> selectedGoalList;
+  List<FitnessGoalDm> selectedGoalList;
 
   FitnessGoals({super.key, required this.selectedGoalList});
 
-  List<LimitationDm> fitnessGoalList = [
-    LimitationDm(
-        title: "Improve your overall health",
-        iconText: Constants.improveOverallHealth,
-        desc:
-            "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
-        index: 1),
-    LimitationDm(
+  List<FitnessGoalDm> fitnessGoalList = [
+    FitnessGoalDm(
+      title: "Improve your overall health",
+      iconText: Constants.improveOverallHealth,
+      desc:
+          "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
+      index: 1,
+    ),
+    FitnessGoalDm(
       iconText: Constants.specificEvent,
       title: "Train for a specific event",
-      desc:
-          "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
+      keyPoints: [
+        KeyPoint(
+          title: "Weight Loss Challenges",
+        ),
+        KeyPoint(
+          title: "Strength Gain Challenges",
+        ),
+        KeyPoint(
+          title: "Yoga Challenges",
+        ),
+        KeyPoint(
+          title: "Mindfulness Challenges",
+        ),
+      ],
       index: 2,
     ),
-    LimitationDm(
+    FitnessGoalDm(
       iconText: Constants.improveForParticularSport,
       title: "Improve your performance in a particular sport",
-      desc:
-          "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
+      keyPoints: [
+        KeyPoint(
+          title: "Basketball",
+        ),
+        KeyPoint(
+          title: "Soccer",
+        ),
+        KeyPoint(
+          title: "Volleyball",
+        ),
+        KeyPoint(
+          title: "Baseball/Softball",
+        ),
+        KeyPoint(
+          title: "Swimming",
+        ),
+        KeyPoint(
+          title: "Running",
+        ),
+        KeyPoint(
+          title: "Cycling",
+        ),
+        KeyPoint(
+          title: "Chess",
+        ),
+        KeyPoint(title: "Rugby")
+      ],
       index: 3,
     ),
-    LimitationDm(
+    FitnessGoalDm(
       iconText: Constants.moreTonedPhysique,
       title: "Develop a more toned physique",
-      desc:
-          "This could include goals like losing weight, gaining muscle, or increasing your cardiovascular endurance. Getting regular exercise is one of the best things you can do for your overall health. It can help you control your weight, reduce your risk of chronic diseases, improve your mood, and boost your energy levels.",
+      keyPoints: [
+        KeyPoint(
+          title: "Resistance Training",
+        ),
+        KeyPoint(
+          title: "Nutrition",
+        ),
+        KeyPoint(
+          title: "Increasing cardiovascular endurance",
+        ),
+        KeyPoint(
+          title: "Cardiovascular Exercise",
+        ),
+        KeyPoint(
+          title: "Recovery",
+        ),
+        KeyPoint(
+          title: "Consistency",
+        )
+      ],
       index: 4,
     ),
   ];
@@ -56,13 +112,13 @@ class FitnessGoals extends StatelessWidget {
         ),
         for (int index = 0; index < fitnessGoalList.length; index++)
           Fitnessgoalcard(
-            title: fitnessGoalList[index].title ?? '',
-            desc: fitnessGoalList[index].desc ?? '',
-            iconText: fitnessGoalList[index].iconText ?? "",
-            isSelected: selectedGoalList.contains(fitnessGoalList[index].title),
+            fitnessGoalDm: fitnessGoalList[index],
+            isSelected: selectedGoalList.isNotEmpty
+                ? selectedGoalList.first.title == fitnessGoalList[index].title
+                : false,
             onTap: () {
-              BlocProvider.of<HomeBloc>(context).add(
-                  SelectFitnessGoalEvent(fitnessGoalList[index].title ?? ''));
+              BlocProvider.of<HomeBloc>(context)
+                  .add(SelectFitnessGoalEvent(fitnessGoalList[index]));
             },
           ),
       ],
