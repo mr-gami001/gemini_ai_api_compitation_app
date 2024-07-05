@@ -58,23 +58,10 @@ class HomeBloc extends Bloc<HomeBlocEvent, HomeBlocState> {
               isSubmitLoading),
         );
 
-        ///
-        String temp = "${selectedFitnessGoal.first.title}";
-        if (selectedFitnessGoal.first.keyPoints != null &&
-            selectedFitnessGoal.first.keyPoints!
-                .any((ele) => ele.isSelected == true)) {
-          temp = "$temp: \n";
-        }
-        selectedFitnessGoal.first.keyPoints?.forEach((element) {
-          if (element.isSelected == true) {
-            temp = temp + "\t${element.title},\n";
-          }
-        });
-
         String res = await getIt<HomeRepo>().submitReport(
             fitnessLevel: selectedLevel,
-            fitnessGoal: temp,
-            workLimits: "workLimits");
+            fitnessGoal: selectedFitnessGoal,
+            workLimits: selectedLimitation);
         emit(TransmitState(res.toString()));
       } catch (e) {
         Constants.errorLog(e);

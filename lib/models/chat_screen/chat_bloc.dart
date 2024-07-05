@@ -8,6 +8,7 @@ import 'message_dm.dart';
 
 class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
   List<MessageDm> chatList;
+  bool? isLoadiing;
 
   ChatBloc(this.chatList) : super(InitState()) {
     on<InitEvent>(_mapInitEventState);
@@ -16,7 +17,7 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
 
   FutureOr _mapInitEventState(InitEvent event, Emitter<ChatBlocState> emit) {
     chatList = [];
-    emit(SucessState([]));
+    emit(SucessState([], isLoading: false));
   }
 
   Future<FutureOr> _mapSendToAIEventState(
@@ -24,7 +25,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
     try {
       chatList.add(MessageDm(
           SenderType.user, event.question, DateTime.now().toString()));
-      emit(SucessState(chatList.reversed.toList()));
+      emit(
+        SucessState(chatList.reversed.toList(), isLoading: true),
+      );
       var response = await Constants.model.generateContent(
         [
           Content.text(event.question),
@@ -33,7 +36,9 @@ class ChatBloc extends Bloc<ChatBlocEvent, ChatBlocState> {
       Constants.sucessLog(response.text);
       chatList.add(
           MessageDm(SenderType.ai, response.text, DateTime.now().toString()));
-      emit(SucessState(chatList.reversed.toList()));
+      emit(
+        SucessState(chatList.reversed.toList(), isLoading: false),
+      );
     } catch (e) {
       Constants.errorLog(e);
     }
@@ -56,6 +61,6 @@ class SendToAIEvent extends ChatBlocEvent {
 
 class SucessState extends ChatBlocState {
   List<MessageDm> chatList;
-
-  SucessState(this.chatList);
+  bool isLoading;
+  SucessState(this.chatList, {this.isLoading = false});
 }

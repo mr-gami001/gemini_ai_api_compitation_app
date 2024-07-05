@@ -76,16 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               listener: (context, state) async {
-                if (state is SucessState) {
-                  String selectedLimitationString = '';
-                  state.selectedLimitationList.forEach((element) {
-                    if (element.isSelected == true) {
-                      selectedLimitationString =
-                          selectedLimitationString + "\t${element.title}";
-                    }
-                  });
-                  print(selectedLimitationString);
-                }
                 if (state is TransmitState) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(

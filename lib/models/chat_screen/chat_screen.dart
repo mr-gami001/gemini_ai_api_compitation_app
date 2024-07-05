@@ -1,7 +1,8 @@
+import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
+import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 import 'chat_bloc.dart';
 import 'message_dm.dart';
@@ -68,71 +69,124 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: BlocConsumer(
-                bloc: chatBloc,
-                builder: (context, state) {
-                  if (state is SucessState) {
-                    chatList = state.chatList;
-                    return ListView.builder(
+
+            BlocConsumer(
+              bloc: chatBloc,
+              builder: (context, state) {
+                if (state is SucessState) {
+                  chatList = state.chatList;
+                  return Expanded(
+                    child: ListView.builder(
                       reverse: true,
                       controller: scrollController,
                       itemBuilder: (context, index) =>
                           messageTile(state.chatList[index]),
                       itemCount: state.chatList.length,
-                    );
-                  }
-                  return const Center(
-                    child: Text("Try Now Chat GPT..."),
-                  );
-                },
-                listener: (context, state) {},
-              ),
-            ),
-            TextField(
-              controller: controller,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(20),
                     ),
-                  ),
-                  // fillColor: Colors.black45,
-                  filled: true,
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  hintText: "Message To GPT ....",
-                  suffix: IconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        if (controller.text.isNotEmpty) {
-                          chatBloc.add(SendToAIEvent(controller.text));
-                          controller.clear();
-                          SystemChannels.textInput
-                              .invokeMethod('TextInput.hide');
-                        }
-                      },
-                      icon: const Icon(Icons.send))),
-              textAlign: TextAlign.left,
-              keyboardAppearance: Brightness.light,
-              keyboardType: TextInputType.text,
-              enableSuggestions: true,
-              textInputAction: TextInputAction.send,
-              onSubmitted: (val) {
-                if (val.isNotEmpty) {
-                  chatBloc.add(SendToAIEvent(controller.text));
-                  controller.clear();
-                  SystemChannels.textInput.invokeMethod('TextInput.hide');
-                  // scrollController
-                  //     .jumpTo(scrollController.position.maxScrollExtent);
+                  );
                 }
+                return const Expanded(
+                    child: Center(
+                  child: Text("Try Now Chat GPT..."),
+                ));
               },
-            )
+              listener: (context, state) {},
+            ),
+            BlocBuilder(
+                bloc: chatBloc,
+                builder: (context, state) {
+                  if (state is SucessState) {
+                    return bottomRow(state.isLoading);
+                  }
+                  return bottomRow(false);
+                })
           ],
         ),
       ),
+    );
+  }
+
+  Widget bottomRow(bool isLoading) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            textAlignVertical: TextAlignVertical.center,
+            cursorHeight: 10,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(20),
+                gapPadding: 0,
+              ),
+              // fillColor: Colors.black45,
+              filled: true,
+              isCollapsed: true,
+              contentPadding:
+                  const EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
+              hintText: "Message To GPT ....",
+              hintStyle: getIt<AppTextStyle>().mukta15pxnormalBlack,
+            ),
+            textAlign: TextAlign.left,
+            keyboardAppearance: Brightness.light,
+            keyboardType: TextInputType.text,
+            enableSuggestions: true,
+            textInputAction: TextInputAction.send,
+            onSubmitted: (val) {
+              if (val.isNotEmpty) {
+                chatBloc.add(SendToAIEvent(controller.text));
+                controller.clear();
+                SystemChannels.textInput.invokeMethod('TextInput.hide');
+                // scrollController
+                //     .jumpTo(scrollController.position.maxScrollExtent);
+              }
+            },
+          ),
+        ),
+        isLoading == false
+            ? InkWell(
+                onTap: () {
+                  if (controller.text.isNotEmpty) {
+                    chatBloc.add(SendToAIEvent(controller.text));
+                    controller.clear();
+                    SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  }
+                },
+                child: const Padding(
+                    padding: EdgeInsets.only(left: 10, right: 15),
+                    child: Icon(Icons.send)),
+              )
+            : const Padding(
+                padding: EdgeInsets.only(
+                  right: 5,
+                  left: 5,
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 17,
+                      backgroundColor: Colors.black,
+                    ),
+                    Center(
+                      child: SizedBox(
+                        height: 27,
+                        width: 27,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.stop,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
+              )
+      ],
     );
   }
 

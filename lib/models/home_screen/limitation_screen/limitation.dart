@@ -123,7 +123,7 @@ class _LimitationState extends State<Limitation> {
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: FitessLevelButton(
-                      title: "Physical limitations",
+                      title: limitationlist[index].title ?? '',
                       isSelected: index == currentLimitationIndex,
                       onTap: () {
                         setState(() {
