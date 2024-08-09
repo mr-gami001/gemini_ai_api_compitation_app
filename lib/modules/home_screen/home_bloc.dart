@@ -1,6 +1,6 @@
-import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
-import 'package:fitness_coach_app/models/home_screen/home_repo.dart';
-import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation_dm.dart';
+import 'package:fitness_coach_app/modules/app_landing/dependecy_inject.dart';
+import 'package:fitness_coach_app/modules/home_screen/home_repo.dart';
+import 'package:fitness_coach_app/modules/home_screen/limitation_screen/limitation_dm.dart';
 import 'package:fitness_coach_app/utils/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

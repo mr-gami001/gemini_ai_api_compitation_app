@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
-import 'models/app_landing/app_bloc.dart';
-import 'models/app_landing/app_landing_screen.dart';
-import 'models/app_landing/dependecy_inject.dart';
+import 'modules/app_landing/app_bloc.dart';
+import 'modules/app_landing/app_landing_screen.dart';
+import 'modules/app_landing/dependecy_inject.dart';
 import 'utils/constants.dart';
 
 const apiKey = 'AIzaSyC9IYcQ5ZQ_NlBp4zsk7ZEKf4kvVVDcQTs';
@@ -17,6 +17,7 @@ Future<void> main() async {
   // );
   injectionSetup();
   HealthLibConfiguration().init();
+  await HealthLibConfiguration().initial();
   try {
     Constants.model = GenerativeModel(
       model: 'gemini-1.5-flash-latest',

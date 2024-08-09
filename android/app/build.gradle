@@ -26,11 +26,15 @@ if (flutterVersionName == null) {
 android {
     namespace = "com.example.fitness_coach_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "26.1.10909125"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
@@ -51,6 +55,18 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+
+    // Configure the JVM toolchain for JDK 21
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    }
+
 }
 
 flutter {

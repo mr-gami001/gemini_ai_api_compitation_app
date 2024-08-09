@@ -1,4 +1,4 @@
-import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation_bloc.dart';
+import 'package:fitness_coach_app/modules/home_screen/limitation_screen/limitation_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

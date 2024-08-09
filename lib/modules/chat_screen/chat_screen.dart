@@ -1,4 +1,4 @@
-import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
+import 'package:fitness_coach_app/modules/app_landing/dependecy_inject.dart';
 import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,8 +37,8 @@ class _ChatScreenState extends State<ChatScreen> {
           borderRadius: BorderRadius.circular(20),
           color: Colors.transparent,
         ),
-        height: MediaQuery.of(context).size.height * 0.5,
-        width: MediaQuery.of(context).size.width * 0.3,
+        height: MediaQuery.of(context).size.height * 0.4,
+        width: MediaQuery.of(context).size.width * 0.2,
         child: Column(
           children: [
             // AppBar(
@@ -47,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
             //   title: ,
             // ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               decoration: const BoxDecoration(
                 color: Colors.purpleAccent,
                 borderRadius: BorderRadius.vertical(
@@ -58,7 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    alignment: Alignment.center,
+                    padding: EdgeInsets.zero,
+                    alignment: Alignment.centerLeft,
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -99,7 +100,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     return bottomRow(state.isLoading);
                   }
                   return bottomRow(false);
-                })
+                }),
+            Text(
+              "AI can make mistakes. Check important info.",
+              style: getIt<AppTextStyle>().mukta10pxnormalBlack,
+            ),
           ],
         ),
       ),
@@ -110,38 +115,41 @@ class _ChatScreenState extends State<ChatScreen> {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: controller,
-            textAlignVertical: TextAlignVertical.center,
-            cursorHeight: 10,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(20),
-                gapPadding: 0,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: TextField(
+              controller: controller,
+              textAlignVertical: TextAlignVertical.center,
+              cursorHeight: 10,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(20),
+                  gapPadding: 0,
+                ),
+                // fillColor: Colors.black45,
+                filled: true,
+                isCollapsed: true,
+                contentPadding: const EdgeInsets.only(
+                    left: 15, top: 5, bottom: 5, right: 15),
+                hintText: "Message To Gemini ....",
+                hintStyle: getIt<AppTextStyle>().mukta15pxnormalBlack,
               ),
-              // fillColor: Colors.black45,
-              filled: true,
-              isCollapsed: true,
-              contentPadding:
-                  const EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
-              hintText: "Message To GPT ....",
-              hintStyle: getIt<AppTextStyle>().mukta15pxnormalBlack,
+              textAlign: TextAlign.left,
+              keyboardAppearance: Brightness.light,
+              keyboardType: TextInputType.text,
+              enableSuggestions: true,
+              textInputAction: TextInputAction.send,
+              onSubmitted: (val) {
+                if (val.isNotEmpty) {
+                  chatBloc.add(SendToAIEvent(controller.text));
+                  controller.clear();
+                  SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  // scrollController
+                  //     .jumpTo(scrollController.position.maxScrollExtent);
+                }
+              },
             ),
-            textAlign: TextAlign.left,
-            keyboardAppearance: Brightness.light,
-            keyboardType: TextInputType.text,
-            enableSuggestions: true,
-            textInputAction: TextInputAction.send,
-            onSubmitted: (val) {
-              if (val.isNotEmpty) {
-                chatBloc.add(SendToAIEvent(controller.text));
-                controller.clear();
-                SystemChannels.textInput.invokeMethod('TextInput.hide');
-                // scrollController
-                //     .jumpTo(scrollController.position.maxScrollExtent);
-              }
-            },
           ),
         ),
         isLoading == false
@@ -154,13 +162,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                 },
                 child: const Padding(
-                    padding: EdgeInsets.only(left: 10, right: 15),
+                    padding: EdgeInsets.only(right: 15),
                     child: Icon(Icons.send)),
               )
             : const Padding(
                 padding: EdgeInsets.only(
                   right: 5,
-                  left: 5,
+                  // left: 5,
                 ),
                 child: Stack(
                   alignment: Alignment.center,

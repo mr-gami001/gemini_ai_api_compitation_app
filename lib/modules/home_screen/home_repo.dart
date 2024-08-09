@@ -1,4 +1,4 @@
-import 'package:fitness_coach_app/models/home_screen/fitness_goal/fitness_goal_dm.dart';
+import 'package:fitness_coach_app/modules/home_screen/fitness_goal/fitness_goal_dm.dart';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 

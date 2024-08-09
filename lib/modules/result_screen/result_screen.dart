@@ -1,4 +1,4 @@
-import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
+import 'package:fitness_coach_app/modules/app_landing/dependecy_inject.dart';
 import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
 

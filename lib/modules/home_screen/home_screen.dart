@@ -1,15 +1,16 @@
-import 'package:fitness_coach_app/models/app_landing/dependecy_inject.dart';
-import 'package:fitness_coach_app/models/home_screen/fitness_goal/fitness_goals.dart';
-import 'package:fitness_coach_app/models/home_screen/home_bloc.dart';
-import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation.dart';
-import 'package:fitness_coach_app/models/home_screen/limitation_screen/limitation_dm.dart';
-import 'package:fitness_coach_app/models/result_screen/result_screen.dart';
+import 'package:fitness_coach_app/modules/app_landing/dependecy_inject.dart';
+import 'package:fitness_coach_app/modules/home_screen/fitness_goal/fitness_goals.dart';
+import 'package:fitness_coach_app/modules/home_screen/home_bloc.dart';
+import 'package:fitness_coach_app/modules/home_screen/limitation_screen/limitation.dart';
+import 'package:fitness_coach_app/modules/home_screen/limitation_screen/limitation_dm.dart';
+import 'package:fitness_coach_app/modules/result_screen/result_screen.dart';
 import 'package:fitness_coach_app/utils/constants.dart';
 import 'package:fitness_coach_app/utils/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../chat_screen/chat_screen.dart';
+import '../drawer/drawer.dart';
 import 'fitess_level_button.dart';
 import 'fitness_goal/fitness_goal_dm.dart';
 
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.purpleAccent,
         centerTitle: true,

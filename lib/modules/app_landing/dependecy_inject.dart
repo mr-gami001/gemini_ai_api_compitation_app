@@ -1,4 +1,4 @@
-import 'package:fitness_coach_app/models/home_screen/home_repo.dart';
+import 'package:fitness_coach_app/modules/home_screen/home_repo.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../utils/text_style.dart';
