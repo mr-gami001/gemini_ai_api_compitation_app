@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 import '../home_screen/home_screen.dart';
 import '../splash_screen/splash_screen.dart';
 import 'app_bloc.dart';
@@ -22,13 +20,16 @@ class _AppLandingScreenState extends State<AppLandingScreen> {
     appBloc?.add(AppStartEvent());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(bloc: appBloc,builder: (context,state){
-      if(state is HomePageState){
-        return HomeScreen();
-      }
-      return SplashScreen();
-    });
+    return BlocBuilder(
+        bloc: appBloc,
+        builder: (context, state) {
+          if (state is HomePageState) {
+            return HomeScreen();
+          }
+          return const SplashScreen();
+        });
   }
 }

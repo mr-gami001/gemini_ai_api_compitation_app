@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../chat_screen/chat_screen.dart';
-import '../drawer/drawer.dart';
 import 'fitess_level_button.dart';
 import 'fitness_goal/fitness_goal_dm.dart';
 
@@ -27,11 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.purpleAccent,
         centerTitle: true,
-        title: const Text("Fitness Coach AI"),
+        title: Text(
+          "Fitness Coach AI",
+          style: getIt<AppTextStyle>().mukta25pxSemoBold,
+        ),
       ),
       body: BlocProvider<HomeBloc>(
         create: (context) => homeBloc,

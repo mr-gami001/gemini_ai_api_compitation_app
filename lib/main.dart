@@ -1,4 +1,3 @@
-import 'package:fitness_coach_app/utils/health_lib_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -16,8 +15,8 @@ Future<void> main() async {
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
   injectionSetup();
-  HealthLibConfiguration().init();
-  await HealthLibConfiguration().initial();
+  // HealthLibConfiguration().init();
+  // await HealthLibConfiguration().initial();
   try {
     Constants.model = GenerativeModel(
       model: 'gemini-1.5-flash-latest',
@@ -28,7 +27,7 @@ Future<void> main() async {
     Constants.errorLog(e);
   }
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -41,7 +40,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         navigatorKey: Constants.navKey,
         debugShowCheckedModeBanner: false,
-        home: AppLandingScreen(),
+        title: "Fitness Coach AI",
+        home: const AppLandingScreen(),
       ),
     );
   }

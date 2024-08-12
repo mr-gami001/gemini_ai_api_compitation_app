@@ -6,6 +6,10 @@ class AppTextStyle {
     fontSize: 20,
     fontWeight: FontWeight.w600,
   );
+  TextStyle mukta25pxSemoBold = GoogleFonts.mukta(
+    fontSize: 25,
+    fontWeight: FontWeight.w600,
+  );
   TextStyle mukta15pxnormal = GoogleFonts.mukta(
     fontSize: 15,
     fontWeight: FontWeight.normal,
